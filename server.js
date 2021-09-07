@@ -46,7 +46,7 @@ class Forecast{
 
     constructor(item){
         //describtion,valid_date from weather.json
-        this.description=`low of ${item.low_temp}, high of${item.max_temp} with ${item.weather.description}`;
+        this.description=`low of ${item.min_temp}, high of${item.max_temp} with ${item.weather.description}`;
         this.date=item.valid_date;
         
         
