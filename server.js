@@ -23,8 +23,8 @@ server.get('/',(req,res)=>{
 // http://localhost:3010/getWeatherinfo?cityName=Amman
 server.get('/getWeatherinfo',(req,res)=>{
  const cityName=req.query.cityName;
-//  const lat=req.query.lat;
-//  const lon=req.query.lon;
+    const lat=req.query.lat;
+    const lon=req.query.lon;
     const returnArr=weatherDate.find((item)=>{
       if(item.city_name===cityName)
       {   
@@ -46,9 +46,10 @@ class Forecast{
 
     constructor(item){
         //describtion,valid_date from weather.json
-        this.description=item.weather.description;
-        this.data=item.valid_date;
-        this.high=item.max_temp;
+        this.description=`low of ${item.low_temp}, high of${item.max_temp} with ${item.weather.description}`;
+        this.date=item.valid_date;
+        
+        
     }
 }
 server.get('*',(req,res)=>{
