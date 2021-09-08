@@ -24,16 +24,16 @@ server.get('/',(req,res)=>{
     res.send('Welcome from the home');
 })
 //http://api.weatherbit.io/v2.0/history/daily/getWeatherinfo
-// http://localhost:3010/getWeatherinfo?lat=''&lon=''
-server.get('/getWeatherinfo',(req,res)=>{
-   const cityName=req.query.cityName;
+// http://localhost:3010/weather?city=Aamman
+server.get('/weather',(req,res)=>{
+    const city=req.query.city;
     const lat=req.query.lat;
     const lon=req.query.lon;
     // &lat=${lat}&lon=${lon}
-    let url=`http://api.weatherbit.io/v2.0/forecast/daily/getWeatherinfo?lat=${lat}&lon=${lon}&Key=${process.env.WEATHER_API_KEY}`;
+    let url=`http://api.weatherbit.io/v2.0/forecast/daily/weather?city=${city}&Key=${process.env.WEATHER_API_KEY}`;
     let weatherInfo=[];
     axios.get(url).then(result=>{
-    //   console.log(result);
+    console.log(url);
       weatherInfo=result.data.data.map(item=>{
          return new Forecast(item);
      })
@@ -48,27 +48,7 @@ server.get('/getWeatherinfo',(req,res)=>{
 
 
 });
-//http://localhost:3010/getMovie?cityName=Amman
-server.get('/getMovie',(req,res)=>{
-    const cityName=req.query.cityName;
-     let urlmovie=`https://api.themoviedb.org/3/search/getMovie?api_key=${process.env.MOVIE_API_KEY}&cityName=${cityName}`;
-     let movieInfo=[];
-     axios.get(urlmovie).then(result=>{
-     //   console.log(result);
-       movieInfo=result.data.results.map(item=>{
-          return new Movie(item);
-      })
- 
-      res.send(movieInfo);
-     })
-     .catch((error)=>{
-         res.status(500).send('Error!');
-     })
- 
- 
- 
- 
- });
+
  
 
 class Forecast{
@@ -82,6 +62,28 @@ class Forecast{
     }
 }
 
+//http://localhost:3010/movie?query=amman
+server.get('/movie',(req,res)=>{
+    let  query=req.query.query;
+    let urlmovie=`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
+    console.log(urlmovie);
+    let movieInfo=[];
+    axios.get(urlmovie).then(movie=>{
+  
+      movieInfo=movie.data.results.map(item=>{
+         return new Movie(item);
+     })
+
+     res.send(movieInfo);
+    })
+    .catch((error)=>{
+        res.status(500).send('Error!');
+    })
+
+    
+
+
+});
 class Movie{
 
     constructor(item){
@@ -90,7 +92,7 @@ class Movie{
       this.vote_average=item.vote_average;
       this.vote_count=item.vote_count;
       this.popularity=item.popularity;
-      this.release=item.release;  
+     
     
     }
 }
